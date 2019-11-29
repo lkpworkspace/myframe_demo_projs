@@ -1,0 +1,3 @@
+[submodule "MyFrame"]
+	path = MyFrame
+	url = https://github.com/lkpworkspace/MyFrame.git
