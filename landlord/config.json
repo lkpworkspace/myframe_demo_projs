@@ -1,0 +1,18 @@
+{
+    "thread":4,
+    "module_path":"./",
+    "module_inst":{
+        "landlord_server":[
+            {
+                "name":"landlord_server",
+                "params":""
+            }
+        ],
+        "landlord_client":[
+            {
+                "name":"landlord_client",
+                "params":""
+            }
+        ]
+    }
+}

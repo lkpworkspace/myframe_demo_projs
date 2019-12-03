@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package landlord;
+
+///////////////////////////////////////// 消息头
+message meta_msg{
+    string msg_name = 1;
+    int32 data_size = 2;
+}
+
+///////////////////////////////////////// 请求消息
+message hall_login {
+    string player_name = 1;
+    int32 player_id = 2;
+}
+
+message hall_match{
+    int32 player_id = 1;
+}
+
+message hall_quit{
+    int32 player_id = 1;
+}
+
+message room_play{
+    int32 player_id = 1;
+    repeated int32 pokers = 2;
+}
+
+message room_grab{
+    int32 player_id = 1;
+    bool grab = 2;
+}
+
+///////////////////////////////////////// 回复消息
+
+// 登录回复
+message player_login{
+    int32 player_id = 1;
+}
+
+// 匹配回复
+message player_match{
+    enum state
+    {
+        MATCH = 0;
+        PLAY = 1;
+    }
+    state s = 1;
+    int32 player_id = 2;
+    repeated int32 player_ids = 3;
+};
+
+// 发牌
+message player_deal{
+    int32 player_id = 1;
+    int32 turn = 2;
+    repeated int32 pokers = 3;
+}
+
+// 抢地主
+message player_grab{
+    enum state
+    {
+        OK = 0;
+        ERR = 1;
+    }
+    state s = 1;
+    int32 player_id = 2;
+    int32 turn = 3;
+}
+
+// 地主
+message player_landlord{
+    int32 player_id = 1;
+    int32 landlord_id = 2;
+    int32 turn = 3;
+    repeated int32 pokers = 4;
+}
+
+message player_play{
+    int32 player_id = 1;
+    int32 turn = 2;
+    repeated int32 pokers = 3;
+}
+
+message player_win{
+    int32 player_id = 1;
+    int32 winner_id = 2;
+}
+
+
