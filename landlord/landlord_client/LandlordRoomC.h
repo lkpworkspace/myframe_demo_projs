@@ -7,7 +7,7 @@
 class LandlordRoomC : public ILandlordRoom, public LandlordUtils
 {
 public:
-	LandlordRoomC(MyContext* c);
+	LandlordRoomC(MyModule* c);
 	virtual ~LandlordRoomC();
 
 //	void player_match();

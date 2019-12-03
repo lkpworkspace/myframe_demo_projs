@@ -2,7 +2,7 @@
 #include "landlord.pb.h"
 #include <iostream>
 
-LandlordHall::LandlordHall(MyContext* c) :
+LandlordHall::LandlordHall(MyModule* c) :
     LandlordUtils(c),
     m_assign_room_id(0)
 {

@@ -127,7 +127,7 @@ void LandlordHallC::Parse(int player_id, std::string& dat)
 void LandlordHallC::CratePlayer()
 {
     int id = m_assign_player_id++;
-    PlayerC* p = new PlayerC(GetContext(), id, id);
+    PlayerC* p = new PlayerC(GetModule(), id, id);
     m_players[id] = p;
 
     // tell landlord server

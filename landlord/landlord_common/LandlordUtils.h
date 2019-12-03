@@ -1,36 +1,32 @@
 #ifndef __LANDLORDUTILS_H__
 #define __LANDLORDUTILS_H__
 #include "google/protobuf/message.h"
-#include "MyContext.h"
 #include "MyMsg.h"
+#include "MyModule.h"
 #include <iostream>
 
 class LandlordUtils
 {
 public:
-	LandlordUtils(MyContext* c) :
-        m_c(c)
+	LandlordUtils(MyModule* c) :
+        m_module(c)
     {}
 	virtual ~LandlordUtils();
 
-    void SetContext(MyContext* c) { m_c = c; }
-    MyContext* GetContext() { return m_c; }
+    void SetModule(MyModule* c) { m_module = c; }
+    MyModule* GetModule() { return m_module; }
 
     std::string SerialMsg(::google::protobuf::Message* msg);
 	::google::protobuf::Message* DeserialMsg(std::string& dat);
 
     void Send(int player_id, ::google::protobuf::Message* msg)
     {
-        MyTextMsg* tmsg = new MyTextMsg(my_handle_name("landlord_server"), SerialMsg(msg));
+        MyTextMsg* tmsg = new MyTextMsg(m_module->GetHandle("landlord_server"), SerialMsg(msg));
         tmsg->session = player_id;
-        if(m_c == nullptr){
-            std::cout << "send context is nullptr" << std::endl;
-            return;
-        }
-        my_send(m_c, tmsg);
+        m_module->Send(tmsg);
     }
 private:
-    MyContext* m_c;
+    MyModule* m_module;
 };
 
 

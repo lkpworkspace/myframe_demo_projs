@@ -1,7 +1,7 @@
 ﻿#include "LandlordRoomC.h"
 #include "imgui.h"
 
-LandlordRoomC::LandlordRoomC(MyContext* c):
+LandlordRoomC::LandlordRoomC(MyModule* c):
     LandlordUtils(c)
 {}
 

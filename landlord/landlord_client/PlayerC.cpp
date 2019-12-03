@@ -3,7 +3,7 @@
 #include <google/protobuf/message.h>
 #include "landlord.pb.h"
 
-PlayerC::PlayerC(MyContext* c, int idx, int id) :
+PlayerC::PlayerC(MyModule* c, int idx, int id) :
 	IPlayer(idx, id),
 	LandlordUtils(c),
 	m_grab(false)

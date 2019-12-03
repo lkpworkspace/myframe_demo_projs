@@ -13,7 +13,7 @@ class LandlordHall : public ILandlordHall, public LandlordUtils
 {
     typedef void (LandlordHall::*msg_handle)(int, ::google::protobuf::Message*);
 public:
-    LandlordHall(MyContext* c);
+    LandlordHall(MyModule* c);
 
     void Parse(int player_id, std::string& dat);
 

@@ -12,7 +12,6 @@
 #include <vector>
 
 #include "MyModule.h"
-#include "MyFrame.h"
 #include "MyMsg.h"
 #include "LandlordHallC.h"
 
@@ -30,7 +29,6 @@ public:
         m_init(false),
         m_exit(false),
         show_demo_window(false),
-        m_handle(0),
         window(nullptr)
     {
         std::cout << "Create landlord client module" << std::endl;
@@ -40,14 +38,12 @@ public:
         std::cout << "Destory landlord client module" << std::endl;
     }
 
-    virtual int Init(MyContext* c, const char* param) override
+    virtual int Init(const char* param) override
     {
-        m_handle = my_handle(c);
-        my_callback(c, CB, this);
-        my_run_in_one_thread(c, true);
-        my_timeout(m_handle, 10, 0xff);
-        m_hall.SetContext(c);
-        std::cout << "landlord client start " << m_handle << std::endl;
+        SetRunInOneThread(true);
+        Timeout(10, 0xff);
+        m_hall.SetModule(this);
+        std::cout << "landlord client start " << GetServiceName() << std::endl;
         return 0;
     }
 
@@ -97,7 +93,7 @@ public:
         io.Fonts->AddFontFromFileTTF("landlord_client/resources/fonts/Cousine-Regular.ttf", 20.0f);
     }
 
-    void GLUpdate(MyLandlordClient* self, MyMsg* msg)
+    void GLUpdate(MyMsg* msg)
     {
         static ImVec4 clear_color{0.45f, 0.55f, 0.60f, 1.00f};
 
@@ -137,7 +133,7 @@ public:
             ImGui::End();
         }
 
-        self->m_hall.UIUpdate();
+        m_hall.UIUpdate();
 
         // Rendering
         ImGui::Render();
@@ -162,39 +158,36 @@ public:
         glfwTerminate();
     }
 
-    static int CB(MyContext* context, MyMsg* msg, void* ud)
+    virtual int CB(MyMsg* msg) override
     {
-        MyLandlordClient* self = static_cast<MyLandlordClient*>(ud);
-
         // 初始化opengl
-        if(self->m_init == false){
-            self->m_init = true;
-            self->GLInit();
+        if(m_init == false){
+            m_init = true;
+            GLInit();
         }
 
         if(msg->GetMsgType() == MyMsg::MyMsgType::RESPONSE){
             MyRespMsg* rmsg = static_cast<MyRespMsg*>(msg);
             if(rmsg->GetRespMsgType() == MyRespMsg::MyRespMsgType::TIMER){
-                if(!self->m_exit && !glfwWindowShouldClose(self->window)){
+                if(!m_exit && !glfwWindowShouldClose(window)){
                     // 重新启动定时，用来刷新界面
-                    my_timeout(self->m_handle, 1, 0xff);
+                    Timeout(1, 0xff);
                     // 界面刷新
-                    self->GLUpdate(self, msg);
-                }else if(!self->m_exit){
-                    self->GLExit();
+                    GLUpdate(msg);
+                }else if(!m_exit){
+                    GLExit();
                 }
             }
         }
 
         if(msg->GetMsgType() == MyMsg::MyMsgType::TEXT){
             MyTextMsg* tmsg = static_cast<MyTextMsg*>(msg);
-            self->m_hall.Parse(tmsg->session, tmsg->GetData());
+            m_hall.Parse(tmsg->session, tmsg->GetData());
         }
         return 0;
     }
 
     LandlordHallC m_hall;
-    uint32_t m_handle;
     GLFWwindow* window;
     bool m_init;
     bool m_exit;

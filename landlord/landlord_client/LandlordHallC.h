@@ -6,14 +6,13 @@
 #include "PlayerC.h"
 #include "LandlordRoomC.h"
 #include "imgui.h"
-#include "MyFrame.h"
 #include "MyContext.h"
 #include "LandlordUtils.h"
 
 class LandlordHallC : public ILandlordHall, public LandlordUtils
 {
 public:
-	LandlordHallC(MyContext* c) :
+	LandlordHallC(MyModule* c) :
 		ILandlordHall(),
 		LandlordUtils(c),
 		m_room(c),

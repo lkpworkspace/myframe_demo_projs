@@ -5,8 +5,6 @@
 #include <sstream>
 
 #include "MyModule.h"
-#include "MyFrame.h"
-#include "MyContext.h"
 #include "MyMsg.h"
 #include "LandlordHall.h"
 
@@ -18,35 +16,30 @@ public:
     {}
     virtual ~MyLandlordService(){}
 
-    virtual int Init(MyContext* c, const char* param) override
+    virtual int Init(const char* param) override
     {
-        m_handle = my_handle(c);
-        my_callback(c, CB, this);
-        m_hall.SetContext(c);
-        std::cout << "landlord server start " << m_handle << std::endl;
-        return 0;        
+        m_hall.SetModule(this);
+        std::cout << "landlord server start " << GetServiceName() << std::endl;
+        return 0;
     }
 
-    static int CB(MyContext* context, MyMsg* msg, void* ud)
+    virtual int CB(MyMsg* msg) override
     {
-        MyLandlordService* self = static_cast<MyLandlordService*>(ud);
-
         if(msg->GetMsgType() == MyMsg::MyMsgType::TEXT){
             MyTextMsg* tmsg = static_cast<MyTextMsg*>(msg);
-            self->m_hall.Parse(tmsg->session, tmsg->GetData());
-            for(auto begin = self->m_hall.Resps().begin(); begin != self->m_hall.Resps().end(); ++begin){
+            m_hall.Parse(tmsg->session, tmsg->GetData());
+            for(auto begin = m_hall.Resps().begin(); begin != m_hall.Resps().end(); ++begin){
                 std::cout << "[landlord server]: resp msg to: " << msg->source << std::endl;
                 MyTextMsg* send_tmsg = new MyTextMsg(msg->source, begin->second);
                 send_tmsg->session = begin->first;
-                my_send(context, send_tmsg);
+                Send(send_tmsg);
             }
-            self->m_hall.Resps().clear();
+            m_hall.Resps().clear();
         }
-        return 0;        
+        return 1;        
     }
 
 private:
-    uint32_t m_handle;
     LandlordHall m_hall;
 };
 

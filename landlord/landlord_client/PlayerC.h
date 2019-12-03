@@ -10,7 +10,7 @@
 class PlayerC : public IPlayer, public LandlordUtils
 {
 public:
-	PlayerC(MyContext* c, int idx, int id);
+	PlayerC(MyModule* c, int idx, int id);
 	virtual ~PlayerC();
 
 	void UIUpdate();
